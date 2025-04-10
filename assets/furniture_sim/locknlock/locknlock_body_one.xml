@@ -1,0 +1,112 @@
+<mujocoinclude>
+    <!-- 컨테이너 치수 (절반값):
+         x=0.0675, y=0.095, z=0.0425
+         (가로=13.5cm, 세로=19cm, 높이=8.5cm)
+    -->
+    <body name="locknlock" childclass="locknlock_container">
+        <!-- 뚜껑 본체 (시각화 + 충돌) -->
+        <geom name="container_body_vis"
+              size="0.0675 0.095 0.0425" type="box" pos="0 0 0"/>
+        <geom class="locknlock_collision"
+              name="container_body_col"
+              size="0.0675 0.095 0.0425" type="box"
+              pos="0 0 0" mass="0.5"/>
+
+        <!-- =============================
+             왼쪽 손잡이 (L-Shape)
+             힌지가 'ㄱ'의 모서리에 위치
+             ============================= -->
+        <body name="handle_left" pos="-0.0675 0 0.0425">
+            <!-- y축 회전: 왼쪽은 -90° ~ 0° 정도 -->
+
+            <!-- 
+              모서리(0,0,0)에서
+              1) 윗면으로 약간 뻗는 박스
+                 (예: x 방향 음수/양수로 조정 가능)
+              2) 옆면으로 내려가는 박스 
+                 (z 방향으로 -값 주어 아래로 뻗게 함)
+              
+              여기서는 (0,0,0)이 ㄱ자의 교차점!
+            -->
+
+            <!-- 윗면 (수평) 박스:  가로 2.6, 세로 5.5 두께 0.3
+                 여기서는 pivot에서 x = +0.015로 뻗어 3cm 길이 -->
+            <geom name="handle_left_top_vis"
+                  material="M_handle_black"
+                  pos="0.013 0 0"
+                  size="0.013 0.0275 0.0015"  
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_left_top_col"
+                  pos="0.013 0 0"
+                  size="0.013 0.0275 0.0015"
+                  type="box" mass="0.05"/>
+
+            <!-- 옆면 (수직) 박스: 가로 2, 세로 5.5, 두께 0.3
+                 pivot(0,0,0)에서 z = -0.03 아래로 3cm 길이 -->
+            <geom name="handle_left_side_vis"
+                  material="M_handle_black"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_left_side_col"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box" mass="0.05"/>
+            
+            <joint name="handle_left_hinge" pos="0.026 0 0" axis="0 1 0" range="0 1.57"/>
+
+            <!-- 관절 위치 확인용 site(옵션) -->
+            <site name="handle_left_joint_site"
+                  pos="0 0 0"
+                  size="0.002"
+                  rgba="1 0 0 1"
+                  type="sphere" group="3"/>
+        </body>
+
+
+        <!-- =============================
+             오른쪽 손잡이 (L-Shape)
+             힌지가 'ㄱ'의 모서리에 위치
+             ============================= -->
+        <body name="handle_right" pos="0.0675 0 0.0425">
+            <!-- y축 회전: 오른쪽은 0° ~ +90° 정도 -->
+            <!-- 윗면 (수평) 박스:
+                 pivot(0,0,0)에서 x = -0.015 (3cm 길이) -->
+            <geom name="handle_right_top_vis"
+                  material="M_handle_black"
+                  pos="-0.013 0 0"
+                  size="0.013 0.0275 0.0015"
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_right_top_col"
+                  pos="-0.013 0 0"
+                  size="0.013 0.0275 0.0015"
+                  type="box" mass="0.05"/>
+
+            <!-- 옆면 (수직) 박스:
+                 pivot(0,0,0)에서 z = -0.03 (3cm 아래) -->
+            <geom name="handle_right_side_vis"
+                  material="M_handle_black"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_right_side_col"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box" mass="0.05"/>
+
+            <joint name="handle_right_hinge" pos="-0.026 0 0" axis="0 1 0" range="-1.57 0"/>
+
+            <!-- 관절 위치 site -->
+            <site name="handle_right_joint_site"
+                  pos="0 0 0"
+                  size="0.002"
+                  rgba="0 1 0 1"
+                  type="sphere" group="3"/>
+        </body>
+
+    </body>
+</mujocoinclude>

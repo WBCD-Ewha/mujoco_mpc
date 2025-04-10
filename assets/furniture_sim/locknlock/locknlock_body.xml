@@ -1,0 +1,139 @@
+<mujocoinclude>
+    <!-- 컨테이너 치수 (절반값):
+         x=0.0675, y=0.095, z=0.0425
+         (가로=13.5cm, 세로=19cm, 높이=8.5cm)
+    -->
+      <!-- ================================================
+         본체(Base) : 몸통
+         ================================================ -->
+    <body name="base_body" pos="0 0 0" childclass="locknlock_container">
+
+        <!-- 몸통 (가로=13.5, 세로=19, 높이=... 여기선 벽만 ~7cm 예시)
+             박스 높이를 조금 줄여서 뚜껑 올라갈 자리 남김 -->
+        <geom name="container_base_vis"
+              size="0.0675 0.095 0.0375"  
+              type="box"
+              pos="0 0 0"/>
+        <geom class="locknlock_collision" name="container_base_col"
+              size="0.0675 0.095 0.0375"
+              type="box"
+              pos="0 0 0"
+              mass="0.5"/>
+    </body>
+
+      <!-- ================================================
+         뚜껑(Lid) : 자유도 6 (free joint) + equality(hinge)
+         ================================================ -->
+    <body name="lid_body" pos="0 0 0.0425" childclass="locknlock_container">
+    <!--<body name="locknlock" childclass="locknlock_container">-->
+        <!-- 뚜껑 본체 (시각화 + 충돌) 
+        <geom name="container_body_vis"
+              size="0.0675 0.095 0.0425" type="box" pos="0 0 0"/>
+        <geom class="locknlock_collision"
+              name="container_body_col"
+              size="0.0675 0.095 0.0425" type="box"
+              pos="0 0 0" mass="0.5"/>
+      -->
+      <!--<joint name="lid_free" type="free"/>-->
+
+        <!-- 뚜껑 윗면 지오메트리 (얇은 박스)
+             가로=13.5, 세로=19, 두께=0.5cm 정도로 예시 -->
+        <geom name="lid_top_vis"
+              size="0.0675 0.095 0.005"
+              type="box"
+              pos="0 0 0"
+              mass="0.2"/>
+        <geom class="locknlock_collision" name="lid_top_col"
+              size="0.0675 0.095 0.005"
+              type="box"
+              pos="0 0 0"
+              mass="0.2"/>
+
+        <!-- handle left -->
+        <body name="handle_left" pos="-0.0675 0 0.005">
+            <geom name="handle_left_top_vis"
+                  material="M_handle_black"
+                  pos="0.013 0 0"
+                  size="0.013 0.0275 0.0015"  
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_left_top_col"
+                  pos="0.013 0 0"
+                  size="0.013 0.0275 0.0015"
+                  type="box" mass="0.05"/>
+
+            <!-- 옆면 (수직) 박스: 가로 2, 세로 5.5, 두께 0.3
+                 pivot(0,0,0)에서 z = -0.03 아래로 3cm 길이 -->
+            <geom name="handle_left_side_vis"
+                  material="M_handle_black"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_left_side_col"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box" mass="0.05"/>
+            
+            <joint name="handle_left_hinge" pos="0.026 0 0" axis="0 1 0" range="0 1.57"/>
+
+            <site name="handle_left_joint_site"
+                  pos="0 0 0"
+                  size="0.002"
+                  rgba="1 0 0 1"
+                  type="sphere" group="3"/>
+        </body>
+
+
+        <!-- handle right -->
+        <body name="handle_right" pos="0.0675 0 0.005">
+            <!-- y축 회전: 오른쪽은 0° ~ +90° 정도 -->
+            <!-- 윗면 (수평) 박스:
+                 pivot(0,0,0)에서 x = -0.015 (3cm 길이) -->
+            <geom name="handle_right_top_vis"
+                  material="M_handle_black"
+                  pos="-0.013 0 0"
+                  size="0.013 0.0275 0.0015"
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_right_top_col"
+                  pos="-0.013 0 0"
+                  size="0.013 0.0275 0.0015"
+                  type="box" mass="0.05"/>
+
+            <!-- 옆면 (수직) 박스:
+                 pivot(0,0,0)에서 z = -0.03 (3cm 아래) -->
+            <geom name="handle_right_side_vis"
+                  material="M_handle_black"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box"/>
+            <geom class="locknlock_collision"
+                  name="handle_right_side_col"
+                  pos="0 0 -0.01"
+                  size="0.0015 0.0275 0.01"
+                  type="box" mass="0.05"/>
+
+            <joint name="handle_right_hinge" pos="-0.026 0 0" axis="0 1 0" range="-1.57 0"/>
+
+            <!-- 관절 위치 site -->
+            <site name="handle_right_joint_site"
+                  pos="0 0 0"
+                  size="0.002"
+                  rgba="0 1 0 1"
+                  type="sphere" group="3"/>
+        </body>
+
+    </body>
+</mujocoinclude>
+
+<!--
+<equality>
+        <joint name="lid_hinge_eq" type="hinge"
+               body1="base_body" body2="lid_body"
+               anchor="-0.0675 0 0.07"    
+               axis="1 0 0"     
+               limited="true" range="0 1.57"
+               solimp="0.9 0.95 0.01" solref="0.01 1"/>
+</equality>
+-->

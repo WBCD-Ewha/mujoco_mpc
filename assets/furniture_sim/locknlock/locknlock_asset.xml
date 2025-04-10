@@ -1,0 +1,45 @@
+<mujoco>
+    <!-- 기본 컴파일 설정 -->
+    <compiler inertiafromgeom="auto" inertiagrouprange="4 4" angle="radian"/>
+
+    <asset>
+        <!-- 투명 플라스틱 텍스처(예시) -->
+        <texture name="T_locknlock_clear" type="cube" width="1" height="1"
+                 file="../../furniture_sim/common/textures/stone0.png"/>
+        <!-- 손잡이에 쓰일 불투명 재질(예시) -->
+        <texture name="T_handle_black" type="cube" width="1" height="1"
+                 file="../../furniture_sim/common/textures/metal0.png"/>
+
+        <material name="M_locknlock_clear" texture="T_locknlock_clear"
+                  texrepeat="1 1" reflectance="0.3" shininess="0.2" texuniform="false" rgba="1 1 1 0.5"/>
+        <material name="M_handle_black" texture="T_handle_black"
+                  texrepeat="1 1" reflectance="0.3" shininess="0.4" texuniform="false" rgba="0.2 0.2 0.2 1.0"/>
+
+        <!-- 충돌용 재질(시각화 색상 약간 파랗게) -->
+        <material name="locknlock_collision_mat" rgba="0.3 0.3 1.0 0.3"
+                  shininess="0" specular="0"/>
+    </asset>
+
+    <default>
+        <!-- 기본 설정: Lock&Lock 본체용 -->
+        <default class="locknlock_container">
+            <!-- 조인트: 관절(여기서는 거의 고정) -->
+            <joint damping="2" frictionloss="2" armature="0.01" limited="true"/>
+            <!-- 본체 겉면: 시각화용 -->
+            <geom conaffinity="0" contype="0" group="1"
+                  material="M_locknlock_clear" type="box"/>
+            <!-- 디폴트 충돌 설정 -->
+            <default class="locknlock_collision">
+                <geom conaffinity="1" condim="3" contype="0" group="4" margin="0.001"
+                      material="locknlock_collision_mat"
+                      solimp="0.8 0.9 0.01" solref="0.02 1"/>
+            </default>
+        </default>
+    </default>
+
+    <!-- 혹시 손잡이 각도를 센서로 읽고 싶다면 예시로 추가 -->
+    <sensor>
+        <jointpos name="handle_left_hinge_sens"  joint="handle_left_hinge"/>
+        <jointpos name="handle_right_hinge_sens" joint="handle_right_hinge"/>
+    </sensor>
+</mujoco>
